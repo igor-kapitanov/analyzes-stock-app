@@ -11,7 +11,9 @@
     <input type="text" id="symbol" name="symbol" required>
     <button type="submit">Analyze</button>
   </form>
-  {% if stock_data %}
+  {% if error_message %}
+    <p style="color: red;">{{ error_message }}</p>
+  {% elif stock_data %}
     <h2>Analysis for {{ symbol }}</h2>
     <table>
       <thead>
