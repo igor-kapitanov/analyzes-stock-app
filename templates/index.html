@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Stock Market Analysis</title>
+</head>
+<body>
+  <h1>Stock Market Analysis</h1>
+  <form method="post">
+    <label for="symbol">Stock Symbol:</label>
+    <input type="text" id="symbol" name="symbol" required>
+    <button type="submit">Analyze</button>
+  </form>
+  {% if stock_data %}
+    <h2>Analysis for {{ symbol }}</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Close Price</th>
+          <th>SMA 20</th>
+          <th>SMA 50</th>
+          <th>Trend</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for date, row in stock_data.iterrows() %}
+        <tr>
+          <td>{{ date.date() }}</td>
+          <td>{{ row['4. close'] }}</td>
+          <td>{{ row['SMA_20'] }}</td>
+          <td>{{ row['SMA_50'] }}</td>
+          <td>{{ 'Up' if row['Trend'] else 'Down' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+</body>
+</html>
