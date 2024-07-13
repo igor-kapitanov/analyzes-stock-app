@@ -11,7 +11,9 @@ def fetch_stock_data(symbol):
     response = requests.get(url)
     data = response.json()
 
-    # Check if the response contains 'Time Series (Daily)'
+    # Print the entire response for debugging
+    print(data)
+
     if 'Time Series (Daily)' in data:
         time_series = data['Time Series (Daily)']
         df = pd.DataFrame.from_dict(time_series, orient='index')
@@ -21,10 +23,14 @@ def fetch_stock_data(symbol):
         df['SMA_20'] = df['4. close'].rolling(window=20).mean()
         df['SMA_50'] = df['4. close'].rolling(window=50).mean()
         df['Trend'] = df['SMA_20'] > df['SMA_50']
-        return df
+        return df, None
+    elif 'Error Message' in data:
+        return pd.DataFrame(), data['Error Message']
+    elif 'Note' in data:
+        # Handling API call frequency limit
+        return pd.DataFrame(), data['Note']
     else:
-        # Return an empty DataFrame and an error message if the key is not found
-        return pd.DataFrame(), data.get('Error Message', 'Unknown error occurred')
+        return pd.DataFrame(), 'Unknown error occurred'
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
